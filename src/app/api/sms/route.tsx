@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
         message: "Invalid request. No number sent",
       });
     }
-    if (!slot || slot.length < 10) {
+    if (!slot || slot.length < 1) {
       return NextResponse.json({
         type: "error",
         message: "Invalid request. No slot sent",
