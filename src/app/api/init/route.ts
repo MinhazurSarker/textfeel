@@ -7,7 +7,8 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDB();
     const user = await User.findOne({ username: "minhazur" });
-    if (!user) {
+    console.log(user);
+    if (user) {
       return NextResponse.json({ type: "success", message: "Hello World" });
     }
     const isPasswordValid = await bcrypt.hashSync("minhazur", 10);
@@ -24,7 +25,6 @@ export async function GET(req: NextRequest) {
       message: "Initiated successful",
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json({
       type: "error",
       message: "Something went wrong",
