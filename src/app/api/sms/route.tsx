@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         message: "Unauthorized action",
       });
     }
-    const { body, slot, time, number } = await req.json();
+    const { body, time, number } = await req.json();
     if (!body || body.length < 1) {
       return NextResponse.json({
         type: "error",
@@ -61,12 +61,7 @@ export async function POST(req: NextRequest) {
         message: "Invalid request. No number sent",
       });
     }
-    if (!slot || slot.length < 1) {
-      return NextResponse.json({
-        type: "error",
-        message: "Invalid request. No slot sent",
-      });
-    }
+
     if (!time || time.length < 1) {
       return NextResponse.json({
         type: "error",
@@ -84,7 +79,7 @@ export async function POST(req: NextRequest) {
     }
     const newSMS = await new SMS({
       body,
-      slot,
+
       time,
       number,
       user: user._id,

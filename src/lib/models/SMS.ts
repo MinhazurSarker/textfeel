@@ -7,7 +7,7 @@ const SMSSchema = new mongoose.Schema(
     body: String,
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     time: Date,
-    slot: String,
+
     number: String,
   },
   {
