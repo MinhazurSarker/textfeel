@@ -1,6 +1,7 @@
 import { SMS } from "@/lib/models/SMS";
 import { User } from "@/lib/models/User";
 import { checkAuth } from "@/lib/utils/CheckAuth";
+import { objectify } from "@/lib/utils/utils";
 
 export const getStats = async () => {
   return await checkAuth(["admin"], async () => {
@@ -10,7 +11,12 @@ export const getStats = async () => {
       const latestMessages = await SMS.find()
         .sort({ createdAt: -1 })
         .populate("user", " name username");
-      return { type: "success", totalMessages, totalUsers, latestMessages };
+      return {
+        type: "success",
+        totalMessages,
+        totalUsers,
+        latestMessages: objectify(latestMessages),
+      };
     } catch (error) {
       return {
         type: "error",

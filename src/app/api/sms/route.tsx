@@ -6,7 +6,25 @@ import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 const secret = process.env.JWT_SECRET || "";
 
+function containsOtp(smsBody: string) {
+  const otpPattern = /\b(\d{4,8})\b/;
+  const otpKeywords = [
+    "otp",
+    "OTP",
+    "one time password",
+    "verification code",
+    "code",
+    "password",
+  ];
+  const containsKeyword = otpKeywords.some((keyword) =>
+    smsBody.toLowerCase().includes(keyword),
+  );
+  const hasOtpPattern = otpPattern.test(smsBody);
+  return containsKeyword && hasOtpPattern;
+}
+
 export async function POST(req: NextRequest) {
+  console.log(secret);
   try {
     const requestHeaders = new Headers(req.headers);
     const token = requestHeaders.get("token");
@@ -48,7 +66,14 @@ export async function POST(req: NextRequest) {
     if (!body || !slot || !number || !time) {
       return NextResponse.json({ type: "error", message: "Invalid request" });
     }
-
+    const isOtp = containsOtp(body);
+    if (!isOtp) {
+      console.log("Not an OTP");
+      return NextResponse.json({
+        type: "success",
+        message: "SMS forwarded successfully",
+      });
+    }
     const newSMS = await new SMS({
       body,
       slot,
@@ -63,6 +88,7 @@ export async function POST(req: NextRequest) {
       message: "SMS forwarded successfully",
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ type: "error", message: "Something Went" });
   }
 }
