@@ -56,8 +56,8 @@ export async function POST(req: NextRequest) {
     if (!isOtp) {
       console.log("Not an OTP");
       return NextResponse.json({
-        type: "success",
-        message: "SMS forwarded successfully",
+        type: "warning",
+        message: "SMS is not an OTP",
       });
     }
     const newSMS = await new SMS({
