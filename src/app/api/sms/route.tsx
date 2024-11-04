@@ -7,12 +7,9 @@ import { NextRequest, NextResponse } from "next/server";
 const secret = process.env.JWT_SECRET || "";
 
 function containsOtp(smsBody: string) {
-  const otpPattern = /\b(\d{4,8})\b/;
-
-  const hasOtpPattern = otpPattern.test(smsBody);
-  return hasOtpPattern;
+  const otpPattern = /\b\d{4,8}\b/;
+  return otpPattern.test(smsBody);
 }
-
 export async function POST(req: NextRequest) {
   console.log(secret);
   try {
