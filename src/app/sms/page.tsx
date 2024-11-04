@@ -1,7 +1,7 @@
 import Pagination from "@/components/Pagination";
 import { getMessages } from "@/lib/actions/get/sms";
 import { deleteAllSMS, deleteSingleSMS } from "@/lib/actions/post/sms";
-import moment from "moment";
+import moment from "moment-timezone";
 
 import { Metadata } from "next";
 
@@ -70,7 +70,9 @@ const page = async ({
               </div>
               <div className="col-span-1 hidden items-center sm:flex">
                 <p id="phone" className="text-sm text-black dark:text-white">
-                  {moment(message.time).format("DD/MM/YYYY hh:mm A")}
+                  {moment(message.time)
+                    .tz("Asia/Dhaka")
+                    .format("DD/MM/YYYY hh:mm A")}
                 </p>
               </div>
               <div className="col-span-1 hidden items-center sm:flex">
