@@ -88,7 +88,6 @@ export async function POST(req: NextRequest) {
       message: "SMS forwarded successfully",
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json({ type: "error", message: "Something Went" });
   }
 }

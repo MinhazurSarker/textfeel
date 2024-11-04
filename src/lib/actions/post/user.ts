@@ -169,7 +169,6 @@ export const createUser = async ({
       await newUser.save();
       return { type: "success", message: "User created successfully" };
     } catch (error) {
-      console.log(error);
       return { type: "error", message: "Failed to create user" };
     }
   });

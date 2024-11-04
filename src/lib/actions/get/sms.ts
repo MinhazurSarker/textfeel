@@ -32,7 +32,7 @@ export const getMessages = async ({
         .skip((parseInt(page) - 1) * parseInt(limit))
         .limit(parseInt(limit))
         .populate("user", " name username");
-      console.log(messages);
+
       return {
         type: "success",
         messages: objectify(messages),

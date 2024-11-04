@@ -67,7 +67,7 @@ export const getUsers = async ({
         .skip((parseInt(page) - 1) * parseInt(limit))
         .limit(parseInt(limit))
         .select("-password");
-      console.log(users);
+
       return {
         type: "success",
         users: objectify(users),
