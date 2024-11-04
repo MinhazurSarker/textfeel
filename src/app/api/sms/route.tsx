@@ -49,9 +49,31 @@ export async function POST(req: NextRequest) {
       });
     }
     const { body, slot, time, number } = await req.json();
-    if (!body || !slot || !number || !time) {
-      return NextResponse.json({ type: "error", message: "Invalid request" });
+    if (!body || body.length < 1) {
+      return NextResponse.json({
+        type: "error",
+        message: "Invalid request. No SMS body sent",
+      });
     }
+    if (!number || number.length < 1) {
+      return NextResponse.json({
+        type: "error",
+        message: "Invalid request. No number sent",
+      });
+    }
+    if (!slot || slot.length < 10) {
+      return NextResponse.json({
+        type: "error",
+        message: "Invalid request. No slot sent",
+      });
+    }
+    if (!time || time.length < 1) {
+      return NextResponse.json({
+        type: "error",
+        message: "Invalid request. No slot sent",
+      });
+    }
+
     const isOtp = containsOtp(body);
     if (!isOtp) {
       console.log("Not an OTP");
