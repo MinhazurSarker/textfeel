@@ -11,7 +11,6 @@ function containsOtp(smsBody: string) {
   return otpPattern.test(smsBody);
 }
 export async function POST(req: NextRequest) {
-  console.log(secret);
   try {
     const requestHeaders = new Headers(req.headers);
     const token = requestHeaders.get("token");
