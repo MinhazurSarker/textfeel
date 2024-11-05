@@ -71,8 +71,8 @@ export async function POST(req: NextRequest) {
       });
     }
     user.name = name;
-    user.simslot1 = simslot1;
-    user.simslot2 = simslot2;
+    user.simslot1 = getLast11Digits(simslot1);
+    user.simslot2 = getLast11Digits(simslot2);
     await user.save();
 
     return NextResponse.json({

@@ -119,8 +119,8 @@ export const updateUser = async ({
       user.name = name;
       user.username = username;
       user.role = role;
-      user.simslot1 = simslot1;
-      user.simslot2 = simslot2;
+      user.simslot1 = getLast11Digits(simslot1);
+      user.simslot2 = getLast11Digits(simslot2);
       if (password && password !== "") {
         const hashPassword = bcrypt.hashSync(password, 10);
         user.password = hashPassword;
@@ -208,8 +208,8 @@ export const createUser = async ({
         username: username,
         role: role,
         password: hashPassword,
-        simslot1: simslot1,
-        simslot2: simslot2,
+        simslot1: getLast11Digits(simslot1),
+        simslot2: getLast11Digits(simslot2),
       });
       await newUser.save();
       return { type: "success", message: "User created successfully" };
