@@ -88,6 +88,9 @@ export const updateUser = async ({
       if (!user) {
         return { type: "error", message: "User not found" };
       }
+      if (getLast11Digits(simslot1) == "" || getLast11Digits(simslot2) == "") {
+        return { type: "error", message: "Please enter phone numbers" };
+      }
       if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
         return {
           type: "error",
@@ -176,8 +179,9 @@ export const createUser = async ({
 }): Promise<ReturnType> => {
   return await checkAuth(["admin"], async (user: User) => {
     try {
-      console.log(getLast11Digits(simslot1));
-      console.log(getLast11Digits(simslot2));
+      if (getLast11Digits(simslot1) == "" || getLast11Digits(simslot2) == "") {
+        return { type: "error", message: "Please enter phone numbers" };
+      }
       if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
         return {
           type: "error",

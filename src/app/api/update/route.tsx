@@ -49,6 +49,9 @@ export async function POST(req: NextRequest) {
     if (!name || !simslot1 || !simslot2) {
       return NextResponse.json({ type: "error", message: "Invalid request" });
     }
+    if (getLast11Digits(simslot1) == "" || getLast11Digits(simslot2) == "") {
+      return { type: "error", message: "Please enter phone numbers" };
+    }
     if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
       return NextResponse.json({
         type: "error",
