@@ -83,9 +83,31 @@ export const updateUser = async ({
       if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
         return { type: "error", message: "Invalid token" };
       }
+
       const user = await User.findById(_id);
       if (!user) {
         return { type: "error", message: "User not found" };
+      }
+      if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
+        return {
+          type: "error",
+          message: "Both numbers can not be same",
+        };
+      }
+      const checkSimslot = await User.findOne({
+        $or: [
+          { simslot1: simslot1 },
+          { simslot2: simslot2 },
+          { simslot2: simslot1 },
+          { simslot1: simslot2 },
+        ],
+        _id: { $ne: user?._id },
+      });
+      if (checkSimslot) {
+        return {
+          type: "error",
+          message: "Phone number already in use",
+        };
       }
       const checkUsername = await User.findOne({
         username: username,
@@ -154,6 +176,8 @@ export const createUser = async ({
 }): Promise<ReturnType> => {
   return await checkAuth(["admin"], async (user: User) => {
     try {
+      console.log(getLast11Digits(simslot1));
+      console.log(getLast11Digits(simslot2));
       if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
         return {
           type: "error",
@@ -167,7 +191,6 @@ export const createUser = async ({
           { simslot2: simslot1 },
           { simslot1: simslot2 },
         ],
-        _id: { $ne: user?._id },
       });
       if (checkSimslot) {
         return {
