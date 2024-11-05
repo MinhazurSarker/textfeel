@@ -2,6 +2,7 @@
 import { connectToDB } from "@/lib/DB/connector";
 import { User } from "@/lib/models/User";
 import { checkAuth } from "@/lib/utils/CheckAuth";
+import { getLast11Digits } from "@/lib/utils/utils";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -153,6 +154,27 @@ export const createUser = async ({
 }): Promise<ReturnType> => {
   return await checkAuth(["admin"], async (user: User) => {
     try {
+      if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
+        return {
+          type: "error",
+          message: "Both numbers can not be same",
+        };
+      }
+      const checkSimslot = await User.findOne({
+        $or: [
+          { simslot1: simslot1 },
+          { simslot2: simslot2 },
+          { simslot2: simslot1 },
+          { simslot1: simslot2 },
+        ],
+        _id: { $ne: user?._id },
+      });
+      if (checkSimslot) {
+        return {
+          type: "error",
+          message: "Phone number already in use",
+        };
+      }
       const checkUsername = await User.findOne({ username: username });
       if (checkUsername) {
         return { type: "error", message: "Username already exists" };

@@ -1,6 +1,6 @@
 import { connectToDB } from "@/lib/DB/connector";
 import { User } from "@/lib/models/User";
-import { objectify } from "@/lib/utils/utils";
+import { getLast11Digits, objectify } from "@/lib/utils/utils";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         message: "Unauthorized action",
       });
     }
+
     const user = await User.findById(userId).select("-password");
     if (!user) {
       return NextResponse.json({
@@ -48,7 +49,27 @@ export async function POST(req: NextRequest) {
     if (!name || !simslot1 || !simslot2) {
       return NextResponse.json({ type: "error", message: "Invalid request" });
     }
-
+    if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
+      return NextResponse.json({
+        type: "error",
+        message: "Both numbers can not be same",
+      });
+    }
+    const checkSimslot = await User.findOne({
+      $or: [
+        { simslot1: simslot1 },
+        { simslot2: simslot2 },
+        { simslot2: simslot1 },
+        { simslot1: simslot2 },
+      ],
+      _id: { $ne: user?._id },
+    });
+    if (checkSimslot) {
+      return NextResponse.json({
+        type: "error",
+        message: "Phone number already in use",
+      });
+    }
     user.name = name;
     user.simslot1 = simslot1;
     user.simslot2 = simslot2;
