@@ -7,7 +7,6 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDB();
     const user = await User.findOne({ username: "minhazur" });
-    console.log(user);
     if (user) {
       return NextResponse.json({ type: "success", message: "Hello World" });
     }
