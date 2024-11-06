@@ -66,7 +66,7 @@ const page = async ({
               >
                 <div className="col-span-1 hidden items-center sm:flex">
                   <p
-                    id={"phone"}
+                    id={"number"}
                     className="text-sm text-black dark:text-white"
                   >
                     {message.number}
@@ -81,7 +81,7 @@ const page = async ({
                 </div>
                 <div className="col-span-1 hidden items-center sm:flex">
                   <p
-                    id="name"
+                    id="username"
                     className=" sms text-sm text-black dark:text-white"
                   >
                     {message.user.username}
