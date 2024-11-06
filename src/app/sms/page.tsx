@@ -62,18 +62,22 @@ const page = async ({
               <div
                 className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
                 key={key}
+                data-name={"message"}
                 id={message._id}
               >
                 <div className="col-span-1 hidden items-center sm:flex">
                   <p
-                    id={"number"}
+                    data-name={"number"}
                     className="text-sm text-black dark:text-white"
                   >
                     {message.number}
                   </p>
                 </div>
                 <div className="col-span-1 hidden items-center sm:flex">
-                  <p id={"time"} className="text-sm text-black dark:text-white">
+                  <p
+                    data-name={"time"}
+                    className="text-sm text-black dark:text-white"
+                  >
                     {moment(message.time)
                       .tz("Asia/Dhaka")
                       .format("DD/MM/YYYY hh:mm:ss A")}
@@ -81,14 +85,17 @@ const page = async ({
                 </div>
                 <div className="col-span-1 hidden items-center sm:flex">
                   <p
-                    id="username"
+                    data-name="name"
                     className=" sms text-sm text-black dark:text-white"
                   >
-                    {message.user.username}
+                    {message.user.name}
                   </p>
                 </div>
                 <div className="col-span-4 flex items-center">
-                  <p id={"sms"} className="text-sm text-black dark:text-white">
+                  <p
+                    data-name={"sms"}
+                    className="text-sm text-black dark:text-white"
+                  >
                     {message.body}
                   </p>
                 </div>
