@@ -80,7 +80,10 @@ const page = async ({
                   </p>
                 </div>
                 <div className="col-span-1 hidden items-center sm:flex">
-                  <p className=" sms text-sm text-black dark:text-white">
+                  <p
+                    id="name"
+                    className=" sms text-sm text-black dark:text-white"
+                  >
                     {message.user.username}
                   </p>
                 </div>
