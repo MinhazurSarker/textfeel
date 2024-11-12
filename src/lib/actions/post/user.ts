@@ -23,12 +23,12 @@ export const login = async (formData: FormData): Promise<ReturnType> => {
   try {
     await connectToDB();
     const user = await User.findOne({ username: username });
-    console.log(user);
+
     if (!user) {
       return { type: "error", message: "Account not found" };
     }
     const pass = password.toString();
-    console.log(pass);
+
     const isPasswordValid = await bcrypt.compare(pass, user.password);
     console.log(isPasswordValid);
     if (!isPasswordValid) {
@@ -36,7 +36,7 @@ export const login = async (formData: FormData): Promise<ReturnType> => {
     }
 
     const token = jwt.sign({ userId: user._id }, secret);
-    console.log(token);
+
     const cookieStore = cookies();
     cookieStore.set("token", token, {
       httpOnly: true,
@@ -115,11 +115,10 @@ export const updateUser = async ({
       user.role = role;
       user.simslot1 = getLast11Digits(simslot1);
       user.simslot2 = getLast11Digits(simslot2);
-      console.log(password);
+
       if (password && password !== "") {
         const hashPassword = bcrypt.hashSync(password, 10);
         user.password = hashPassword;
-        console.log("password saved");
       }
       await user.save();
       return { type: "success", message: "User updated successfully" };
