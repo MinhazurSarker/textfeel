@@ -115,6 +115,7 @@ export const updateUser = async ({
       user.role = role;
       user.simslot1 = getLast11Digits(simslot1);
       user.simslot2 = getLast11Digits(simslot2);
+      console.log(password);
       if (password && password !== "") {
         const hashPassword = bcrypt.hashSync(password, 10);
         user.password = hashPassword;
