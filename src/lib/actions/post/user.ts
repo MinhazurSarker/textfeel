@@ -17,33 +17,26 @@ interface ReturnType {
 export const login = async (formData: FormData): Promise<ReturnType> => {
   const { username, password } = Object.fromEntries(formData);
 
-  // const hashPassword = bcrypt.hashSync(password.toString(), 10);
-  // const newUser = new User({
-  //   username: username,
-  //   password: hashPassword,
-  //   role: "admin",
-  // });
-  // await newUser.save();
-  // return { type: "success", message: "User created successfully" };
-
   if (!username || !password) {
     return { type: "error", message: "Please enter all fields" };
   }
   try {
     await connectToDB();
     const user = await User.findOne({ username: username });
+    console.log(user);
     if (!user) {
-      return { type: "error", message: "Invalid credentials" };
+      return { type: "error", message: "Account not found" };
     }
-    const isPasswordValid = await bcrypt.compare(
-      password.toString(),
-      user.password,
-    );
+    const pass = password.toString();
+    console.log(pass);
+    const isPasswordValid = await bcrypt.compare(pass, user.password);
+    console.log(isPasswordValid);
     if (!isPasswordValid) {
       return { type: "error", message: "Invalid credentials" };
     }
 
     const token = jwt.sign({ userId: user._id }, secret);
+    console.log(token);
     const cookieStore = cookies();
     cookieStore.set("token", token, {
       httpOnly: true,
@@ -52,6 +45,7 @@ export const login = async (formData: FormData): Promise<ReturnType> => {
     });
     return { type: "success", message: "Login successful" };
   } catch (error) {
+    console.log(error);
     return { type: "error", message: "Invalid credentials" };
   }
 };
@@ -83,7 +77,6 @@ export const updateUser = async ({
       if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
         return { type: "error", message: "Invalid token" };
       }
-
       const user = await User.findById(_id);
       if (!user) {
         return { type: "error", message: "User not found" };
