@@ -156,8 +156,12 @@ function PageComp({ user }: { user: User }) {
                     name="role"
                     className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                   >
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
+                    <option selected={userData.role == "admin"} value="admin">
+                      Admin
+                    </option>
+                    <option selected={userData.role == "user"} value="user">
+                      User
+                    </option>
                   </select>
                 </div>
                 <div className="mb-5.5">

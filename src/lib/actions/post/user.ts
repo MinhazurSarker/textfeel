@@ -118,6 +118,7 @@ export const updateUser = async ({
       if (password && password !== "") {
         const hashPassword = bcrypt.hashSync(password, 10);
         user.password = hashPassword;
+        console.log("password saved");
       }
       await user.save();
       return { type: "success", message: "User updated successfully" };
