@@ -96,24 +96,24 @@ const ECommerce = ({
             >
               <div className="col-span-1 hidden items-center sm:flex">
                 <p id="phone" className="text-sm text-black dark:text-white">
-                  {message.number}
+                  {message?.number}
                 </p>
               </div>
               <div className="col-span-1 hidden items-center sm:flex">
                 <p id="phone" className="text-sm text-black dark:text-white">
-                  {moment(message.time)
+                  {moment(message?.time)
                     .tz("Asia/Dhaka")
                     .format("DD/MM/YYYY hh:mm A")}
                 </p>
               </div>
               <div className="col-span-1 hidden items-center sm:flex">
                 <p className=" sms text-sm text-black dark:text-white">
-                  {message.user.username}
+                  {message?.user?.username}
                 </p>
               </div>
               <div className="col-span-4 flex items-center">
                 <p id="sms" className="text-sm text-black dark:text-white">
-                  {message.body}
+                  {message?.body}
                 </p>
               </div>
 
