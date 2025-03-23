@@ -311,9 +311,9 @@ function PageComp() {
                     {userData.familyNumbers.map((item, index) => (
                       <div
                         key={index}
-                        className="grid grid-cols-2 gap-4 rounded-md border-2 border-stroke p-4"
+                        className="grid grid-cols-1 gap-4 rounded-md border-2 border-stroke p-4 lg:grid-cols-9"
                       >
-                        <div className="col-span-1">
+                        <div className="col-span-1 lg:col-span-4">
                           <label
                             className="mb-3 block text-sm font-medium text-black dark:text-white"
                             htmlFor="Username"
@@ -334,7 +334,7 @@ function PageComp() {
                             placeholder="Full name"
                           />
                         </div>
-                        <div className="col-span-1">
+                        <div className="col-span-1 lg:col-span-4">
                           <label
                             className="mb-3 block text-sm font-medium text-black dark:text-white"
                             htmlFor="Username"
@@ -354,6 +354,20 @@ function PageComp() {
                             }}
                             placeholder="Web file number"
                           />
+                        </div>
+                        <div className="col-span-1 ">
+                          <label
+                            className="mb-3 block text-sm font-medium text-black dark:text-white"
+                            htmlFor="Username"
+                          >
+                            Delete
+                          </label>
+                          <button
+                            onClick={(e) => removeFamilyNumber(index)}
+                            className="flex justify-center rounded bg-danger px-6 py-2 font-medium text-gray hover:bg-opacity-90"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
                     ))}

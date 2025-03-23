@@ -84,6 +84,22 @@ export const getUsers = async ({
     }
   });
 };
+export const getAllUsers = async () => {
+  return await checkAuth(["admin"], async () => {
+    try {
+      await connectToDB();
+      const users = await User.find({
+        role: "user",
+      })
+        .sort({ createdAt: -1 })
+        .select("-password");
+
+      return objectify(users);
+    } catch (error) {
+      return [];
+    }
+  });
+};
 
 export const getUser = async (id: string) => {
   return await checkAuth(["admin"], async () => {
@@ -100,6 +116,18 @@ export const getUser = async (id: string) => {
         return { type: "error", message: "User not found" };
       }
       return { type: "success", user: objectify(user) };
+    } catch (error) {
+      return { type: "error", message: "Something went worng" };
+    }
+  });
+};
+export const getProfile = async () => {
+  return await checkAuth(["admin", "user"], async (user: any) => {
+    try {
+      return {
+        type: "success",
+        user: { ...objectify(user), password: undefined },
+      };
     } catch (error) {
       return { type: "error", message: "Something went worng" };
     }

@@ -24,7 +24,7 @@ const page = async ({
   return (
     <Pagination pages={pages}>
       <div className="flex flex-col gap-10">
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className=" overflow-x-auto rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="flex w-full items-center justify-between  px-4 py-6 md:px-6 xl:px-7.5">
             <h4 className="text-xl font-semibold text-black dark:text-white">
               SMS
@@ -39,7 +39,12 @@ const page = async ({
             </form>
           </div>
 
-          <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
+          <div
+            style={{
+              minWidth: "1000px",
+            }}
+            className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
+          >
             <div className="col-span-1 flex items-center">
               <p className="font-medium">Number</p>
             </div>
@@ -57,7 +62,12 @@ const page = async ({
               <p className="font-medium">Action</p>
             </div>
           </div>
-          <div id="messages">
+          <div
+            style={{
+              minWidth: "1000px",
+            }}
+            id="messages"
+          >
             {messages.map((message: any, key: number) => (
               <div
                 className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"

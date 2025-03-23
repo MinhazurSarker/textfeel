@@ -62,6 +62,11 @@ export const updateUser = async ({
   password,
   simslot1,
   simslot2,
+  webFileNumber,
+  ivac,
+  mission,
+  visaType,
+  familyNumbers,
 }: {
   _id: string;
   name: string;
@@ -70,6 +75,14 @@ export const updateUser = async ({
   password: string;
   simslot1: string;
   simslot2: string;
+  webFileNumber: string;
+  ivac: string;
+  mission: string;
+  visaType: string;
+  familyNumbers: {
+    fullName: string;
+    webFileNumber: string;
+  }[];
 }): Promise<ReturnType> => {
   return await checkAuth(["admin"], async (user: User) => {
     try {
@@ -114,6 +127,11 @@ export const updateUser = async ({
       user.role = role;
       user.simslot1 = getLast11Digits(simslot1);
       user.simslot2 = getLast11Digits(simslot2);
+      user.webFileNumber = webFileNumber;
+      user.ivac = ivac || "IVAC, Dhaka (JFP)";
+      user.mission = mission || "Dhaka";
+      user.visaType = visaType || "TOURIST VISA";
+      user.familyNumbers = familyNumbers;
 
       if (password && password !== "") {
         const hashPassword = bcrypt.hashSync(password, 10);
@@ -160,6 +178,11 @@ export const createUser = async ({
   password,
   simslot1,
   simslot2,
+  webFileNumber,
+  ivac,
+  mission,
+  visaType,
+  familyNumbers,
 }: {
   name: string;
   username: string;
@@ -167,6 +190,14 @@ export const createUser = async ({
   password: string;
   simslot1: string;
   simslot2: string;
+  webFileNumber: string;
+  ivac: string;
+  mission: string;
+  visaType: string;
+  familyNumbers: {
+    fullName: string;
+    webFileNumber: string;
+  }[];
 }): Promise<ReturnType> => {
   return await checkAuth(["admin"], async (user: User) => {
     try {
@@ -202,11 +233,99 @@ export const createUser = async ({
         password: hashPassword,
         simslot1: getLast11Digits(simslot1),
         simslot2: getLast11Digits(simslot2),
+        webFileNumber: webFileNumber,
+        ivac: ivac || "IVAC, Dhaka (JFP)",
+        mission: mission || "Dhaka",
+        visaType: visaType || "TOURIST VISA",
+        familyNumbers: familyNumbers,
       });
       await newUser.save();
       return { type: "success", message: "User created successfully" };
     } catch (error) {
       return { type: "error", message: "Failed to create user" };
+    }
+  });
+};
+
+export const updateProfile = async ({
+  name,
+  username,
+  password,
+  simslot1,
+  simslot2,
+  webFileNumber,
+  ivac,
+  mission,
+  visaType,
+  familyNumbers,
+}: {
+  name: string;
+  username: string;
+  password: string;
+  simslot1: string;
+  simslot2: string;
+  webFileNumber: string;
+  ivac: string;
+  mission: string;
+  visaType: string;
+  familyNumbers: {
+    fullName: string;
+    webFileNumber: string;
+  }[];
+}): Promise<ReturnType> => {
+  return await checkAuth(["user", "admin"], async (user: any) => {
+    try {
+      if (!user) {
+        return { type: "error", message: "User not found" };
+      }
+
+      if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
+        return {
+          type: "error",
+          message: "Both numbers can not be same",
+        };
+      }
+      const checkSimslot = await User.findOne({
+        $or: [
+          { simslot1: simslot1 },
+          { simslot2: simslot2 },
+          { simslot2: simslot1 },
+          { simslot1: simslot2 },
+        ],
+        _id: { $ne: user?._id },
+      });
+      if (checkSimslot) {
+        return {
+          type: "error",
+          message: "Phone number already in use",
+        };
+      }
+      const checkUsername = await User.findOne({
+        username: username,
+        _id: { $ne: user?._id },
+      });
+      if (checkUsername) {
+        return { type: "error", message: "Username already exists" };
+      }
+      user.name = name;
+      user.username = username;
+      user.simslot1 = getLast11Digits(simslot1);
+      user.simslot2 = getLast11Digits(simslot2);
+      user.webFileNumber = webFileNumber;
+      user.ivac = ivac || "IVAC, Dhaka (JFP)";
+      user.mission = mission || "Dhaka";
+      user.visaType = visaType || "TOURIST VISA";
+      user.familyNumbers = familyNumbers;
+
+      if (password && password !== "") {
+        const hashPassword = bcrypt.hashSync(password, 10);
+        user.password = hashPassword;
+      }
+      await user.save();
+      return { type: "success", message: "User updated successfully" };
+    } catch (error) {
+      console.log(error);
+      return { type: "error", message: "Failed to update user" };
     }
   });
 };

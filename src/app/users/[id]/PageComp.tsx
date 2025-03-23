@@ -1,6 +1,7 @@
 "use client";
 
 import { deleteUser, updateUser } from "@/lib/actions/post/user";
+import { ivacs, missions, visaTypes } from "@/lib/models/User";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -15,6 +16,30 @@ function PageComp({ user }: { user: User }) {
     setUserData(user);
     return () => {};
   }, [user]);
+
+  const addFamilyNumber = () => {
+    setUserData({
+      ...userData,
+      familyNumbers: [
+        ...userData.familyNumbers,
+        { fullName: "", webFileNumber: "" },
+      ],
+    });
+  };
+  const removeFamilyNumber = (index: number) => {
+    setUserData({
+      ...userData,
+      familyNumbers: userData.familyNumbers.filter((_, i) => i !== index),
+    });
+  };
+  const updateFamilyNumber = (index: number, field: string, value: any) => {
+    setUserData({
+      ...userData,
+      familyNumbers: userData.familyNumbers.map((familyNumber, i) =>
+        i === index ? { ...familyNumber, [field]: value } : familyNumber,
+      ),
+    });
+  };
   const update = async (e: any) => {
     e.preventDefault();
     const res = await updateUser(userData);
@@ -180,6 +205,183 @@ function PageComp({ user }: { user: User }) {
                     }}
                     placeholder="devidjhon24"
                   />
+                </div>
+                <hr />
+                <div className="mb-5.5">
+                  <label
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    htmlFor="Username"
+                  >
+                    Web File Number
+                  </label>
+                  <input
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="text"
+                    value={userData.webFileNumber}
+                    onChange={(e) => {
+                      setUserData({
+                        ...userData,
+                        webFileNumber: e.target.value,
+                      });
+                    }}
+                    placeholder="Web file number"
+                  />
+                </div>
+                <div className="mb-5.5">
+                  <label
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    htmlFor="Username"
+                  >
+                    IVAC
+                  </label>
+                  <select
+                    value={userData.ivac}
+                    onChange={(e) => {
+                      setUserData({
+                        ...userData,
+                        ivac: e.target.value,
+                      });
+                    }}
+                    name="role"
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                  >
+                    {ivacs.map((ivac, index) => (
+                      <option key={index} value={ivac}>
+                        {ivac}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-5.5">
+                  <label
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    htmlFor="Username"
+                  >
+                    Mission
+                  </label>
+                  <select
+                    value={userData.mission}
+                    onChange={(e) => {
+                      setUserData({
+                        ...userData,
+                        mission: e.target.value,
+                      });
+                    }}
+                    name="role"
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                  >
+                    {missions.map((mission, index) => (
+                      <option key={index} value={mission}>
+                        {mission}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-5.5">
+                  <label
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    htmlFor="Username"
+                  >
+                    Visa type
+                  </label>
+                  <select
+                    value={userData.visaType}
+                    onChange={(e) => {
+                      setUserData({
+                        ...userData,
+                        visaType: e.target.value,
+                      });
+                    }}
+                    name="role"
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                  >
+                    {visaTypes.map((item, index) => (
+                      <option key={index} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-5.5">
+                  <label
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    htmlFor="Username"
+                  >
+                    Family Numbers
+                  </label>
+                  <div className="flex flex-col gap-4">
+                    {userData.familyNumbers.map((item, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-1 gap-4 rounded-md border-2 border-stroke p-4 lg:grid-cols-9"
+                      >
+                        <div className="col-span-1 lg:col-span-4">
+                          <label
+                            className="mb-3 block text-sm font-medium text-black dark:text-white"
+                            htmlFor="Username"
+                          >
+                            Full name
+                          </label>
+                          <input
+                            className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                            type="text"
+                            value={item.fullName}
+                            onChange={(e) => {
+                              updateFamilyNumber(
+                                index,
+                                "fullName",
+                                e.target.value,
+                              );
+                            }}
+                            placeholder="Full name"
+                          />
+                        </div>
+                        <div className="col-span-1 lg:col-span-4">
+                          <label
+                            className="mb-3 block text-sm font-medium text-black dark:text-white"
+                            htmlFor="Username"
+                          >
+                            Web File Number
+                          </label>
+                          <input
+                            className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                            type="text"
+                            value={item.webFileNumber}
+                            onChange={(e) => {
+                              updateFamilyNumber(
+                                index,
+                                "webFileNumber",
+                                e.target.value,
+                              );
+                            }}
+                            placeholder="Web file number"
+                          />
+                        </div>
+                        <div className="col-span-1 ">
+                          <label
+                            className="mb-3 block text-sm font-medium text-black dark:text-white"
+                            htmlFor="Username"
+                          >
+                            Delete
+                          </label>
+                          <button
+                            onClick={(e) => removeFamilyNumber(index)}
+                            className="flex justify-center rounded bg-danger px-6 py-2 font-medium text-gray hover:bg-opacity-90"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      onClick={(e) => addFamilyNumber()}
+                      className="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90"
+                    >
+                      Add Family Number
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex justify-between gap-4.5">
