@@ -26,15 +26,19 @@ export default function Wrapper({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   useEffect(() => {
-    if (!token || !user || user?.role !== "admin") {
-      router.push("/login");
+    if (["/login", "/otp"].includes(pathname)) {
+      return;
+    } else {
+      if (!token || !user || user?.role !== "admin") {
+        router.push("/login");
+      }
     }
     return () => {};
-  }, [user, token]);
+  }, [user, token, pathname]);
 
   return (
     <AppContext.Provider value={{ user, token }}>
-      {["/login", "/register", "/404"].includes(pathname) ? (
+      {["/login", "/register", "/404", "/otp"].includes(pathname) ? (
         <>{children}</>
       ) : (
         <React.Fragment>
@@ -42,6 +46,7 @@ export default function Wrapper({
           <div className="flex">
             {/* <!-- ===== Sidebar Start ===== --> */}
             <Sidebar
+              user={user}
               sidebarOpen={sidebarOpen}
               setSidebarOpen={setSidebarOpen}
             />

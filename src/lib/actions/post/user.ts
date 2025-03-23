@@ -30,7 +30,6 @@ export const login = async (formData: FormData): Promise<ReturnType> => {
     const pass = password.toString();
 
     const isPasswordValid = await bcrypt.compare(pass, user.password);
-    console.log(isPasswordValid);
     if (!isPasswordValid) {
       return { type: "error", message: "Invalid credentials" };
     }
