@@ -58,6 +58,7 @@ export const updateUser = async ({
   _id,
   name,
   username,
+  email,
   role,
   password,
   simslot1,
@@ -71,6 +72,7 @@ export const updateUser = async ({
   _id: string;
   name: string;
   username: string;
+  email: string;
   role: "admin" | "user";
   password: string;
   simslot1: string;
@@ -124,6 +126,7 @@ export const updateUser = async ({
       }
       user.name = name;
       user.username = username;
+      user.email = email;
       user.role = role;
       user.simslot1 = getLast11Digits(simslot1);
       user.simslot2 = getLast11Digits(simslot2);
@@ -174,6 +177,7 @@ export const deleteUser = async ({
 export const createUser = async ({
   name,
   username,
+  email,
   role,
   password,
   simslot1,
@@ -186,6 +190,7 @@ export const createUser = async ({
 }: {
   name: string;
   username: string;
+  email: string;
   role: "admin" | "user";
   password: string;
   simslot1: string;
@@ -229,6 +234,7 @@ export const createUser = async ({
       const newUser = new User({
         name: name,
         username: username,
+        email: email,
         role: role,
         password: hashPassword,
         simslot1: getLast11Digits(simslot1),
@@ -250,6 +256,7 @@ export const createUser = async ({
 export const updateProfile = async ({
   name,
   username,
+  email,
   password,
   simslot1,
   simslot2,
@@ -261,6 +268,7 @@ export const updateProfile = async ({
 }: {
   name: string;
   username: string;
+  email: string;
   password: string;
   simslot1: string;
   simslot2: string;
@@ -309,6 +317,7 @@ export const updateProfile = async ({
       }
       user.name = name;
       user.username = username;
+      user.email = email;
       user.simslot1 = getLast11Digits(simslot1);
       user.simslot2 = getLast11Digits(simslot2);
       user.webFileNumber = webFileNumber;

@@ -2,6 +2,7 @@ interface User {
   _id: string;
   name: string;
   username: string;
+  email: string;
   role: "admin" | "user";
   password: string;
   simslot1: string;

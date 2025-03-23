@@ -32,7 +32,7 @@ function ExportUsersToExcel() {
     const headers = [
       "NAME",
       "USERNAME",
-      "ROLE",
+      "EMAIL",
       "MISSION",
       "IVAC",
       "VISA TYPE",
@@ -50,7 +50,7 @@ function ExportUsersToExcel() {
       const row = [
         user.name,
         user.username,
-        user.role,
+        user.email,
         user.mission,
         user.ivac,
         user.visaType,

@@ -212,6 +212,26 @@ function PageComp({ user }: { user: User }) {
                     className="mb-3 block text-sm font-medium text-black dark:text-white"
                     htmlFor="Username"
                   >
+                    Email
+                  </label>
+                  <input
+                    className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    type="text"
+                    value={userData.email}
+                    onChange={(e) => {
+                      setUserData({
+                        ...userData,
+                        email: e.target.value,
+                      });
+                    }}
+                    placeholder="Email"
+                  />
+                </div>
+                <div className="mb-5.5">
+                  <label
+                    className="mb-3 block text-sm font-medium text-black dark:text-white"
+                    htmlFor="Username"
+                  >
                     Web File Number
                   </label>
                   <input

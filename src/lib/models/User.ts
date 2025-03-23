@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
+    email: { type: String },
     password: { type: String, required: true },
     simslot1: String,
     simslot2: String,
