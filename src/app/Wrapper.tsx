@@ -2,11 +2,12 @@
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { IUser } from "@/lib/models/User";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const AppContext = React.createContext<{
-  user: User | null | undefined;
+  user: IUser | null | undefined;
   token: string | null | undefined;
 }>({
   user: null,
@@ -20,7 +21,7 @@ export default function Wrapper({
 }: {
   children: React.ReactNode;
   token: string | null | undefined;
-  user: User | null | undefined;
+  user: IUser | null | undefined;
 }) {
   const router = useRouter();
   const pathname = usePathname();

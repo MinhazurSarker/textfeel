@@ -1,7 +1,42 @@
 import mongoose, { Document } from "mongoose";
-interface User extends Document {
-  name: string;
+
+export interface IUser extends Document {
+  _id: string;
+  username: string;
+  role: "admin" | "user";
+  password: string;
+  simslot1: {
+    number: string;
+    email: string;
+    name: string;
+    webFileNumber: string;
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
+  simslot2: {
+    number: string;
+    email: string;
+    name: string;
+    webFileNumber: string;
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
 }
+
 export const ivacs = [
   "IVAC, Dhaka (JFP)",
   "IVAC , RAJSHAHI",
@@ -16,41 +51,73 @@ export const visaTypes = [
   "TOURIST VISA",
 ];
 
-const UserSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema<IUser>(
   {
-    name: String,
     username: { type: String, required: true, unique: true },
     role: {
       type: String,
       enum: ["admin", "user"],
       default: "user",
     },
-    email: { type: String },
     password: { type: String, required: true },
-    simslot1: String,
-    simslot2: String,
-    mission: {
-      type: String,
-      enum: missions,
-      default: "Dhaka",
-    },
-    webFileNumber: { type: String, default: "" },
-    ivac: {
-      type: String,
-      default: "IVAC, Dhaka (JFP)",
-      enum: ivacs,
-    },
-    visaType: {
-      type: String,
-      default: "TOURIST VISA",
-      enum: visaTypes,
-    },
-    familyNumbers: [
-      {
-        fullName: { type: String, default: "" },
-        webFileNumber: { type: String, default: "" },
+    simslot1: {
+      name: String,
+      email: { type: String },
+      number: String,
+      mission: {
+        type: String,
+        enum: missions,
+        default: "Dhaka",
       },
-    ],
+      webFileNumber: { type: String, default: "" },
+      ivac: {
+        type: String,
+        default: "IVAC, Dhaka (JFP)",
+        enum: ivacs,
+      },
+      visaType: {
+        type: String,
+        default: "TOURIST VISA",
+        enum: visaTypes,
+      },
+      familyNumbers: [
+        {
+          fullName: { type: String, default: "" },
+          webFileNumber: { type: String, default: "" },
+        },
+      ],
+      ivacLogin: { type: String, default: "" },
+      ivacPass: { type: String, default: "" },
+    },
+    simslot2: {
+      name: String,
+      email: { type: String },
+      number: String,
+      mission: {
+        type: String,
+        enum: missions,
+        default: "Dhaka",
+      },
+      webFileNumber: { type: String, default: "" },
+      ivac: {
+        type: String,
+        default: "IVAC, Dhaka (JFP)",
+        enum: ivacs,
+      },
+      visaType: {
+        type: String,
+        default: "TOURIST VISA",
+        enum: visaTypes,
+      },
+      familyNumbers: [
+        {
+          fullName: { type: String, default: "" },
+          webFileNumber: { type: String, default: "" },
+        },
+      ],
+      ivacLogin: { type: String, default: "" },
+      ivacPass: { type: String, default: "" },
+    },
   },
   {
     timestamps: true,

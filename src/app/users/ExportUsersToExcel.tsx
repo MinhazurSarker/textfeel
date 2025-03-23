@@ -1,5 +1,6 @@
 "use client";
 import { getAllUsers } from "@/lib/actions/get/user";
+import { IUser } from "@/lib/models/User";
 import { saveAs } from "file-saver";
 import moment from "moment";
 import { useState } from "react";
@@ -11,17 +12,39 @@ function ExportUsersToExcel() {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/users"); // Replace with your API endpoint
+      // Replace with your API endpoint
       const users = await getAllUsers();
+      const list = users.flatMap((item: IUser) => [
+        item.simslot1,
+        item.simslot2,
+      ]);
+
+      generateExcel(list);
       setLoading(false);
-      generateExcel(users);
     } catch (error) {
       console.error("Error fetching user data:", error);
       setLoading(false);
     }
   };
-  const generateExcel = (users: any[]) => {
-    if (!users || users.length === 0) return;
+  const generateExcel = (
+    users: {
+      number: string;
+      email: string;
+      name: string;
+      webFileNumber: string;
+      ivac: string;
+      mission: string;
+      visaType: string;
+      familyNumbers: {
+        fullName: string;
+        webFileNumber: string;
+      }[];
+      ivacLogin: string;
+      ivacPass: string;
+    }[],
+  ) => {
+    console.log(users);
+    if (!users || users?.length === 0) return;
 
     // Find the max number of family members for dynamic headers
     const maxFamilyMembers = Math.max(
@@ -31,10 +54,12 @@ function ExportUsersToExcel() {
     // Define the headers
     const headers = [
       "NAME",
-      "USERNAME",
+      "PHONE",
       "EMAIL",
       "MISSION",
       "IVAC",
+      "IVAC LOGIN",
+      "IVAC PASS",
       "VISA TYPE",
       "WEB FILE NUMBER",
       "NUMBER OF FAMILY MEMBERS",
@@ -49,10 +74,12 @@ function ExportUsersToExcel() {
       const familyData = user.familyNumbers || [];
       const row = [
         user.name,
-        user.username,
+        user.number,
         user.email,
         user.mission,
         user.ivac,
+        user.ivacLogin,
+        user.ivacPass,
         user.visaType,
         user.webFileNumber,
         familyData.length,

@@ -1,14 +1,14 @@
 "use server";
 import { connectToDB } from "@/lib/DB/connector";
-import { User } from "@/lib/models/User";
+import { IUser, User } from "@/lib/models/User";
 import { checkAuth } from "@/lib/utils/CheckAuth";
 import { getLast11Digits } from "@/lib/utils/utils";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
 const secret = process.env.JWT_SECRET || "";
 interface ReturnType {
   type: "error" | "success" | "warning";
@@ -53,40 +53,50 @@ export const logout = async () => {
   cookieStore.delete("token");
   return redirect("login");
 };
-
 export const updateUser = async ({
   _id,
-  name,
   username,
-  email,
   role,
   password,
   simslot1,
   simslot2,
-  webFileNumber,
-  ivac,
-  mission,
-  visaType,
-  familyNumbers,
 }: {
   _id: string;
-  name: string;
   username: string;
-  email: string;
   role: "admin" | "user";
   password: string;
-  simslot1: string;
-  simslot2: string;
-  webFileNumber: string;
-  ivac: string;
-  mission: string;
-  visaType: string;
-  familyNumbers: {
-    fullName: string;
+  simslot1: {
+    number: string;
+    email: string;
+    name: string;
     webFileNumber: string;
-  }[];
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
+  simslot2: {
+    number: string;
+    email: string;
+    name: string;
+    webFileNumber: string;
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
 }): Promise<ReturnType> => {
-  return await checkAuth(["admin"], async (user: User) => {
+  return await checkAuth(["admin"], async () => {
     try {
       if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
         return { type: "error", message: "Invalid token" };
@@ -96,7 +106,9 @@ export const updateUser = async ({
         return { type: "error", message: "User not found" };
       }
 
-      if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
+      if (
+        getLast11Digits(simslot1.number) == getLast11Digits(simslot2.number)
+      ) {
         return {
           type: "error",
           message: "Both numbers can not be same",
@@ -104,10 +116,10 @@ export const updateUser = async ({
       }
       const checkSimslot = await User.findOne({
         $or: [
-          { simslot1: simslot1 },
-          { simslot2: simslot2 },
-          { simslot2: simslot1 },
-          { simslot1: simslot2 },
+          { "simslot1.number": simslot1.number },
+          { "simslot2.number": simslot2.number },
+          { "simslot2.number": simslot1.number },
+          { "simslot1.number": simslot2.number },
         ],
         _id: { $ne: user?._id },
       });
@@ -124,23 +136,22 @@ export const updateUser = async ({
       if (checkUsername) {
         return { type: "error", message: "Username already exists" };
       }
-      user.name = name;
       user.username = username;
-      user.email = email;
       user.role = role;
-      user.simslot1 = getLast11Digits(simslot1);
-      user.simslot2 = getLast11Digits(simslot2);
-      user.webFileNumber = webFileNumber;
-      user.ivac = ivac || "IVAC, Dhaka (JFP)";
-      user.mission = mission || "Dhaka";
-      user.visaType = visaType || "TOURIST VISA";
-      user.familyNumbers = familyNumbers;
-
+      user.simslot1 = {
+        ...simslot1,
+        number: getLast11Digits(simslot1.number),
+      };
+      user.simslot2 = {
+        ...simslot2,
+        number: getLast11Digits(simslot2.number),
+      };
       if (password && password !== "") {
         const hashPassword = bcrypt.hashSync(password, 10);
         user.password = hashPassword;
       }
       await user.save();
+      revalidatePath("/users");
       return { type: "success", message: "User updated successfully" };
     } catch (error) {
       console.log(error);
@@ -148,13 +159,12 @@ export const updateUser = async ({
     }
   });
 };
-
 export const deleteUser = async ({
   _id,
 }: {
   _id: string;
 }): Promise<ReturnType> => {
-  return await checkAuth(["admin"], async (user: User) => {
+  return await checkAuth(["admin"], async (user: IUser) => {
     try {
       if (!_id || !mongoose.Types.ObjectId.isValid(_id)) {
         return { type: "error", message: "Invalid token" };
@@ -167,6 +177,7 @@ export const deleteUser = async ({
         return { type: "error", message: "User not found" };
       }
       await User.findByIdAndDelete(_id);
+      revalidatePath("/users");
       return { type: "success", message: "User deleted successfully" };
     } catch (error) {
       console.log(error);
@@ -175,38 +186,51 @@ export const deleteUser = async ({
   });
 };
 export const createUser = async ({
-  name,
   username,
-  email,
   role,
   password,
   simslot1,
   simslot2,
-  webFileNumber,
-  ivac,
-  mission,
-  visaType,
-  familyNumbers,
 }: {
-  name: string;
   username: string;
-  email: string;
   role: "admin" | "user";
   password: string;
-  simslot1: string;
-  simslot2: string;
-  webFileNumber: string;
-  ivac: string;
-  mission: string;
-  visaType: string;
-  familyNumbers: {
-    fullName: string;
+  simslot1: {
+    number: string;
+    email: string;
+    name: string;
     webFileNumber: string;
-  }[];
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
+  simslot2: {
+    number: string;
+    email: string;
+    name: string;
+    webFileNumber: string;
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
 }): Promise<ReturnType> => {
-  return await checkAuth(["admin"], async (user: User) => {
+  return await checkAuth(["admin"], async (user: IUser) => {
     try {
-      if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
+      if (
+        getLast11Digits(simslot1.number) == getLast11Digits(simslot2.number)
+      ) {
         return {
           type: "error",
           message: "Both numbers can not be same",
@@ -214,10 +238,10 @@ export const createUser = async ({
       }
       const checkSimslot = await User.findOne({
         $or: [
-          { simslot1: simslot1 },
-          { simslot2: simslot2 },
-          { simslot2: simslot1 },
-          { simslot1: simslot2 },
+          { "simslot1.number": simslot1.number },
+          { "simslot2.number": simslot2.number },
+          { "simslot2.number": simslot1.number },
+          { "simslot1.number": simslot2.number },
         ],
       });
       if (checkSimslot) {
@@ -232,62 +256,69 @@ export const createUser = async ({
       }
       const hashPassword = bcrypt.hashSync(password, 10);
       const newUser = new User({
-        name: name,
         username: username,
-        email: email,
         role: role,
         password: hashPassword,
-        simslot1: getLast11Digits(simslot1),
-        simslot2: getLast11Digits(simslot2),
-        webFileNumber: webFileNumber,
-        ivac: ivac || "IVAC, Dhaka (JFP)",
-        mission: mission || "Dhaka",
-        visaType: visaType || "TOURIST VISA",
-        familyNumbers: familyNumbers,
+        simslot1: { ...simslot1, nmber: getLast11Digits(simslot1.number) },
+        simslot2: { ...simslot2, number: getLast11Digits(simslot2.number) },
       });
       await newUser.save();
+      revalidatePath("/users");
       return { type: "success", message: "User created successfully" };
     } catch (error) {
+      console.log(error);
       return { type: "error", message: "Failed to create user" };
     }
   });
 };
-
 export const updateProfile = async ({
-  name,
   username,
-  email,
   password,
   simslot1,
   simslot2,
-  webFileNumber,
-  ivac,
-  mission,
-  visaType,
-  familyNumbers,
 }: {
-  name: string;
   username: string;
-  email: string;
   password: string;
-  simslot1: string;
-  simslot2: string;
-  webFileNumber: string;
-  ivac: string;
-  mission: string;
-  visaType: string;
-  familyNumbers: {
-    fullName: string;
+  simslot1: {
+    number: string;
+    email: string;
+    name: string;
     webFileNumber: string;
-  }[];
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
+  simslot2: {
+    number: string;
+    email: string;
+    name: string;
+    webFileNumber: string;
+    ivac: string;
+    mission: string;
+    visaType: string;
+    familyNumbers: {
+      fullName: string;
+      webFileNumber: string;
+    }[];
+    ivacLogin: string;
+    ivacPass: string;
+  };
 }): Promise<ReturnType> => {
-  return await checkAuth(["user", "admin"], async (user: any) => {
+  return await checkAuth(["user", "admin"], async (user: IUser) => {
     try {
       if (!user) {
         return { type: "error", message: "User not found" };
       }
 
-      if (getLast11Digits(simslot1) == getLast11Digits(simslot2)) {
+      if (
+        getLast11Digits(simslot1.number) == getLast11Digits(simslot2.number)
+      ) {
         return {
           type: "error",
           message: "Both numbers can not be same",
@@ -295,10 +326,10 @@ export const updateProfile = async ({
       }
       const checkSimslot = await User.findOne({
         $or: [
-          { simslot1: simslot1 },
-          { simslot2: simslot2 },
-          { simslot2: simslot1 },
-          { simslot1: simslot2 },
+          { "simslot1.number": simslot1.number },
+          { "simslot2.number": simslot2.number },
+          { "simslot2.number": simslot1.number },
+          { "simslot1.number": simslot2.number },
         ],
         _id: { $ne: user?._id },
       });
@@ -315,17 +346,9 @@ export const updateProfile = async ({
       if (checkUsername) {
         return { type: "error", message: "Username already exists" };
       }
-      user.name = name;
       user.username = username;
-      user.email = email;
-      user.simslot1 = getLast11Digits(simslot1);
-      user.simslot2 = getLast11Digits(simslot2);
-      user.webFileNumber = webFileNumber;
-      user.ivac = ivac || "IVAC, Dhaka (JFP)";
-      user.mission = mission || "Dhaka";
-      user.visaType = visaType || "TOURIST VISA";
-      user.familyNumbers = familyNumbers;
-
+      user.simslot1 = { ...simslot1, number: getLast11Digits(simslot1.number) };
+      user.simslot2 = { ...simslot2, number: getLast11Digits(simslot2.number) };
       if (password && password !== "") {
         const hashPassword = bcrypt.hashSync(password, 10);
         user.password = hashPassword;

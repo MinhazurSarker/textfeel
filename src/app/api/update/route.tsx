@@ -63,10 +63,10 @@ export async function POST(req: NextRequest) {
     }
     const checkSimslot = await User.findOne({
       $or: [
-        { simslot1: simslot1 },
-        { simslot2: simslot2 },
-        { simslot2: simslot1 },
-        { simslot1: simslot2 },
+        { "simslot1.number": simslot1 },
+        { "simslot2.number": simslot2 },
+        { "simslot2.number": simslot1 },
+        { "simslot1.number": simslot2 },
       ],
       _id: { $ne: user?._id },
     });
@@ -76,9 +76,8 @@ export async function POST(req: NextRequest) {
         message: "Phone number already in use",
       });
     }
-    user.name = name;
-    user.simslot1 = getLast11Digits(simslot1);
-    user.simslot2 = getLast11Digits(simslot2);
+    user.simslot1.number = getLast11Digits(simslot1);
+    user.simslot2.number = getLast11Digits(simslot2);
     await user.save();
 
     return NextResponse.json({

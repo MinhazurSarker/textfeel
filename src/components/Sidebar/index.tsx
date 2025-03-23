@@ -3,6 +3,7 @@
 import ClickOutside from "@/components/ClickOutside";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { IUser } from "@/lib/models/User";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,7 +11,7 @@ import { usePathname } from "next/navigation";
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
-  user: User | null | undefined;
+  user: IUser | null | undefined;
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, user }: SidebarProps) => {

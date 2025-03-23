@@ -1,6 +1,7 @@
 import Pagination from "@/components/Pagination";
 import { getUsers } from "@/lib/actions/get/user";
 
+import { IUser } from "@/lib/models/User";
 import { Metadata } from "next";
 import Link from "next/link";
 import ExportUsersToExcel from "./ExportUsersToExcel";
@@ -49,7 +50,7 @@ const page = async ({
             >
               <div className=" grid  grid-cols-7 border-t border-stroke px-4 py-4.5 md:px-6 2xl:px-7.5">
                 <div className="col-span-2 flex items-center">
-                  <p className="font-medium">Name</p>
+                  <p className="font-medium">Role</p>
                 </div>
                 <div className="col-span-2 flex items-center">
                   <p className="font-medium">Username</p>
@@ -66,14 +67,14 @@ const page = async ({
                 </div>
               </div>
 
-              {users.map((user: User, key: number) => (
+              {users.map((user: IUser, key: number) => (
                 <div
                   className=" grid  grid-cols-7 border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"
                   key={key}
                 >
                   <div className="col-span-2 flex items-center">
                     <p className="text-left text-sm text-black dark:text-white">
-                      {user.name}
+                      {user.role}
                     </p>
                   </div>
                   <div className="col-span-2 flex items-center">
@@ -83,12 +84,12 @@ const page = async ({
                   </div>
                   <div className="col-span-1 flex items-center">
                     <p className="text-left text-sm text-black dark:text-white">
-                      {user.simslot1}
+                      {user.simslot1.number}
                     </p>
                   </div>
                   <div className="col-span-1 flex items-center">
                     <p className="text-left text-sm text-black dark:text-white">
-                      {user.simslot2}
+                      {user.simslot2.number}
                     </p>
                   </div>
 
