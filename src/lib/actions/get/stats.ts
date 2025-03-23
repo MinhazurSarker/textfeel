@@ -1,10 +1,14 @@
 import { SMS } from "@/lib/models/SMS";
-import { User } from "@/lib/models/User";
+import { IUser, User } from "@/lib/models/User";
 import { checkAuth } from "@/lib/utils/CheckAuth";
 import { objectify } from "@/lib/utils/utils";
+import { redirect } from "next/navigation";
 
 export const getStats = async () => {
-  return await checkAuth(["admin"], async () => {
+  return await checkAuth(["admin", "user"], async (user: IUser) => {
+    if (user.role === "user") {
+      return redirect("/profile");
+    }
     try {
       const totalMessages = await SMS.countDocuments({});
       const totalUsers = await User.countDocuments({});

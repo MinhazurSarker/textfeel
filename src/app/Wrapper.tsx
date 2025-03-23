@@ -27,7 +27,7 @@ export default function Wrapper({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   useEffect(() => {
-    if (["/login", "/otp"].includes(pathname)) {
+    if (["/login", "/otp", "/profile"].includes(pathname)) {
       return;
     } else {
       if (!token || !user || user?.role !== "admin") {

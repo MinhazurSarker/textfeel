@@ -3,22 +3,12 @@
 import { updateProfile } from "@/lib/actions/post/user";
 import { IUser, ivacs, missions, visaTypes } from "@/lib/models/User";
 import { User } from "@/types/types";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 function PageComp({ user }: { user: IUser }) {
   const [userData, setUserData] = useState<User>(user);
   const [checked, setChecked] = useState(false);
-  const router = useRouter();
-  useEffect(() => {
-    if (!user) {
-      router.push("/users");
-    }
-    setUserData(user);
-    return () => {};
-  }, [user]);
-
   const addFamilyNumber = (slot: "simslot1" | "simslot2") => {
     setUserData({
       ...userData,
