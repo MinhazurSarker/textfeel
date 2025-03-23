@@ -226,16 +226,8 @@ export const createUser = async ({
     ivacPass: string;
   };
 }): Promise<ReturnType> => {
-  return await checkAuth(["admin"], async (user: IUser) => {
+  return await checkAuth(["admin"], async () => {
     try {
-      if (
-        getLast11Digits(simslot1.number) == getLast11Digits(simslot2.number)
-      ) {
-        return {
-          type: "error",
-          message: "Both numbers can not be same",
-        };
-      }
       const checkSimslot = await User.findOne({
         $or: [
           { "simslot1.number": simslot1.number },
