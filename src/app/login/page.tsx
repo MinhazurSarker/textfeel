@@ -147,7 +147,7 @@ const SignIn: React.FC = () => {
               action={async (f) => {
                 const res = await login(f);
                 if (res.type === "success") {
-                  router.push("/");
+                  router.push(res.redirect || "/");
                 } else {
                   toast[res.type](res.message);
                 }

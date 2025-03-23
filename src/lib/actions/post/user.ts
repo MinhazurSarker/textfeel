@@ -13,6 +13,7 @@ const secret = process.env.JWT_SECRET || "";
 interface ReturnType {
   type: "error" | "success" | "warning";
   message: string;
+  redirect?: string;
 }
 export const login = async (formData: FormData): Promise<ReturnType> => {
   const { username, password } = Object.fromEntries(formData);
@@ -42,7 +43,11 @@ export const login = async (formData: FormData): Promise<ReturnType> => {
       secure: true,
       sameSite: "strict",
     });
-    return { type: "success", message: "Login successful" };
+    return {
+      type: "success",
+      message: "Login successful",
+      redirect: user.role === "admin" ? "/" : "/profile",
+    };
   } catch (error) {
     console.log(error);
     return { type: "error", message: "Invalid credentials" };
