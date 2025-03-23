@@ -10,17 +10,19 @@ const password: string | undefined = process.env.MONGODB_PASS;
 export const connectToDB = async () => {
   try {
     if (connection.isConnected) return;
+
     if (dbUri) {
       const db = await mongoose.connect(dbUri, {
+        authSource: "admin",
         user: username,
         pass: password,
       });
       connection.isConnected = db.connections[0].readyState;
       console.log(
-        "Connected to MongoDB! ReadyState:" + db.connections[0].readyState
+        "Connected to MongoDB! ReadyState:" + db.connections[0].readyState,
       );
     } else {
-      console.log("No MongoDB URI provided, skipping connection");
+      throw new Error("No MongoDB URI provided");
     }
   } catch (error: Error | any) {
     console.log("Something went wrong while connecting to MongoDB");
