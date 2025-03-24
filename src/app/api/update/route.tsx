@@ -84,11 +84,11 @@ export async function POST(req: NextRequest) {
       type: "success",
       message: "Updated successfully",
       user: {
-        name: "",
-        role: user?.role,
-        username: user?.username,
+        name: "Textfeel",
+        role: user?.role || "user",
+        username: user?.username || "",
         simslot2: user?.simslot2?.number || "",
-        simslot1: user?.simslot1?.number,
+        simslot1: user?.simslot1?.number || "",
       },
     });
   } catch (error) {
