@@ -1,6 +1,6 @@
 import { connectToDB } from "@/lib/DB/connector";
 import { User } from "@/lib/models/User";
-import { getLast11Digits, objectify } from "@/lib/utils/utils";
+import { getLast11Digits } from "@/lib/utils/utils";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
@@ -82,8 +82,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       type: "success",
-      message: "SMS forwarded successfully",
-      user: objectify(user),
+      message: "Updated successfully",
+      user: {
+        name: "",
+        role: user?.role,
+        username: user?.username,
+        simslot2: user?.simslot2?.number || "",
+        simslot1: user?.simslot1?.number,
+      },
     });
   } catch (error) {
     return NextResponse.json({ type: "error", message: "Something Went" });

@@ -1,6 +1,5 @@
 import { connectToDB } from "@/lib/DB/connector";
 import { User } from "@/lib/models/User";
-import { objectify } from "@/lib/utils/utils";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
@@ -44,7 +43,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       type: "success",
       message: "Login successful",
-      user: objectify(user),
+      user: {
+        name: "",
+        role: user?.role,
+        username: user?.username,
+        simslot2: user?.simslot2?.number || "",
+        simslot1: user?.simslot1?.number,
+      },
       token: token,
     });
   } catch (error) {
