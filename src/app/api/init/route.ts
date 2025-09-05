@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
       message: "Initiated successful",
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({
       type: "error",
       message: "Something went wrong",
