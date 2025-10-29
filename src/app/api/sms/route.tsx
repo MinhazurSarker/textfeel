@@ -9,7 +9,19 @@ const secret = process.env.JWT_SECRET || "";
 
 function containsOtp(smsBody: string) {
   const otpPattern = /\b\d{4,8}\b/;
-  return otpPattern.test(smsBody);
+  const matchOTPPattern = otpPattern.test(smsBody);
+  const containsKeywords = [
+    "otp",
+    "pin",
+    "code",
+    "password",
+    "pass",
+    "confirm",
+    "verify",
+  ]
+    .map((keyword) => new RegExp(keyword, "i"))
+    .some((regex) => regex.test(smsBody));
+  return matchOTPPattern || containsKeywords;
 }
 export async function POST(req: NextRequest) {
   try {
