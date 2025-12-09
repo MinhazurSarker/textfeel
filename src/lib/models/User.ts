@@ -1,7 +1,7 @@
 import mongoose, { Document } from "mongoose";
 
 export interface IUser extends Document {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   username: string;
   role: "admin" | "user";
   password: string;

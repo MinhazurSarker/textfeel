@@ -1,7 +1,7 @@
 "use server";
 
 import { connectToDB } from "@/lib/DB/connector";
-import { User } from "@/lib/models/User";
+import { IUser, User } from "@/lib/models/User";
 import { checkAuth } from "@/lib/utils/CheckAuth";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -126,7 +126,7 @@ export const getProfile = async () => {
     try {
       return {
         type: "success",
-        user: { ...objectify(user), password: undefined },
+        user: { ...(objectify(user) as IUser), password: undefined },
       };
     } catch (error) {
       return { type: "error", message: "Something went worng" };

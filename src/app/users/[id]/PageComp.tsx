@@ -2,13 +2,12 @@
 
 import { deleteUser, updateUser } from "@/lib/actions/post/user";
 import { IUser, ivacs, missions, visaTypes } from "@/lib/models/User";
-import { User } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 function PageComp({ user }: { user: IUser }) {
-  const [userData, setUserData] = useState<User>(user);
+  const [userData, setUserData] = useState<IUser>(user);
   const router = useRouter();
   useEffect(() => {
     if (!user) {
@@ -28,7 +27,7 @@ function PageComp({ user }: { user: IUser }) {
           { fullName: "", webFileNumber: "" },
         ],
       },
-    });
+    } as IUser);
   };
   const removeFamilyNumber = (index: number, slot: "simslot1" | "simslot2") => {
     setUserData({
@@ -39,7 +38,7 @@ function PageComp({ user }: { user: IUser }) {
           (_, i) => i !== index,
         ),
       },
-    });
+    } as IUser);
   };
   const updateFamilyNumber = (
     index: number,
@@ -55,16 +54,16 @@ function PageComp({ user }: { user: IUser }) {
           i === index ? { ...familyNumber, [field]: value } : familyNumber,
         ),
       },
-    });
+    } as IUser);
   };
   const update = async (e: any) => {
     e.preventDefault();
-    const res = await updateUser(userData);
+    const res = await updateUser(userData as IUser);
     toast[res.type](res.message);
   };
   const deleteHandler = async (e: any) => {
     e.preventDefault();
-    const res = await deleteUser(userData);
+    const res = await deleteUser(userData as IUser);
     if (res.type === "success") {
       router.push("/users");
     }
@@ -94,7 +93,10 @@ function PageComp({ user }: { user: IUser }) {
                     type="text"
                     value={userData.username}
                     onChange={(e) => {
-                      setUserData({ ...userData, username: e.target.value });
+                      setUserData({
+                        ...userData,
+                        username: e.target.value,
+                      } as IUser);
                     }}
                     placeholder="devidjhon24"
                   />
@@ -112,7 +114,7 @@ function PageComp({ user }: { user: IUser }) {
                       setUserData({
                         ...userData,
                         role: e.target.value == "admin" ? "admin" : "user",
-                      });
+                      } as IUser);
                     }}
                     name="role"
                     className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -137,7 +139,10 @@ function PageComp({ user }: { user: IUser }) {
                     type="password"
                     value={userData.password}
                     onChange={(e) => {
-                      setUserData({ ...userData, password: e.target.value });
+                      setUserData({
+                        ...userData,
+                        password: e.target.value,
+                      } as IUser);
                     }}
                     placeholder="devidjhon24"
                   />
@@ -167,7 +172,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               number: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
@@ -218,7 +223,7 @@ function PageComp({ user }: { user: IUser }) {
                                 ...userData.simslot1,
                                 name: e.target.value,
                               },
-                            });
+                            } as IUser);
                           }}
                           placeholder="Devid Jhon"
                         />
@@ -242,7 +247,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               email: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="Email"
                       />
@@ -265,7 +270,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               webFileNumber: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="Web file number"
                       />
@@ -286,7 +291,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               ivac: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         name="role"
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -316,7 +321,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               ivacLogin: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="IVAC Login username (Leave empty if you don't know)"
                       />
@@ -339,7 +344,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               ivacPass: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="IVAC Login Password"
                       />
@@ -360,7 +365,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               mission: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         name="role"
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -388,7 +393,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot1,
                               visaType: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         name="role"
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -509,7 +514,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               number: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
@@ -560,7 +565,7 @@ function PageComp({ user }: { user: IUser }) {
                                 ...userData.simslot2,
                                 name: e.target.value,
                               },
-                            });
+                            } as IUser);
                           }}
                           placeholder="Devid Jhon"
                         />
@@ -584,7 +589,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               email: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="Email"
                       />
@@ -607,7 +612,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               webFileNumber: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="Web file number"
                       />
@@ -628,7 +633,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               ivac: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         name="role"
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -658,7 +663,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               ivacLogin: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="IVAC Login username (Leave empty if you don't know)"
                       />
@@ -681,7 +686,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               ivacPass: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         placeholder="IVAC Login Password"
                       />
@@ -702,7 +707,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               mission: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         name="role"
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
@@ -730,7 +735,7 @@ function PageComp({ user }: { user: IUser }) {
                               ...userData.simslot2,
                               visaType: e.target.value,
                             },
-                          });
+                          } as IUser);
                         }}
                         name="role"
                         className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
